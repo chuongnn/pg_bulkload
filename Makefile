@@ -1,7 +1,7 @@
 #
 # pg_bulkload: Makefile
 #
-#    Copyright (c) 2007-2010, NIPPON TELEGRAPH AND TELEPHONE CORPORATION
+#    Copyright (c) 2007-2011, NIPPON TELEGRAPH AND TELEPHONE CORPORATION
 #
 ifdef USE_PGXS
 PG_CONFIG = pg_config

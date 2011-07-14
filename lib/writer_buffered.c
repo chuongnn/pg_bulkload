@@ -1,7 +1,7 @@
 /*
  * pg_bulkload: lib/writer_buffered.c
  *
- *	  Copyright (c) 2007-2010, NIPPON TELEGRAPH AND TELEPHONE CORPORATION
+ *	  Copyright (c) 2007-2011, NIPPON TELEGRAPH AND TELEPHONE CORPORATION
  */
 
 #include "postgres.h"
@@ -46,7 +46,7 @@ CreateBufferedWriter(Oid relid, const WriterOptions *options)
 	self->base.dumpParams = (WriterDumpParamsProc) BufferedWriterDumpParams;
 
 	self->rel = heap_open(relid, AccessExclusiveLock);
-	VerifyTarget(self->rel);
+	VerifyTarget(self->rel, options->max_dup_errors);
 
 	SpoolerOpen(&self->spooler, self->rel, true, options);
 	self->base.context = GetPerTupleMemoryContext(self->spooler.estate);

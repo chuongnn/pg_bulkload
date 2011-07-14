@@ -1,7 +1,7 @@
 /*
  * pg_bulkload: include/reader.h
  *
- *	  Copyright (c) 2007-2010, NIPPON TELEGRAPH AND TELEPHONE CORPORATION
+ *	  Copyright (c) 2007-2011, NIPPON TELEGRAPH AND TELEPHONE CORPORATION
  */
 
 /**
@@ -148,6 +148,7 @@ typedef struct TupleFormer
 	TupleDesc	desc;		/**< descriptor */
 	Datum	   *values;		/**< array[desc->natts] of values */
 	bool	   *isnull;		/**< array[desc->natts] of NULL marker */
+	Oid		   *typId;		/**< array[desc->natts] of type oid */
 	Oid		   *typIOParam;	/**< array[desc->natts] of type information */
 	FmgrInfo   *typInput;	/**< array[desc->natts] of type input functions */
 	Oid		   *typMod;		/**< array[desc->natts] of type modifiers */

@@ -1,7 +1,7 @@
 /*
  * pg_bulkload: bin/pg_bulkload.c
  *
- *	  Copyright (c) 2007-2010, NIPPON TELEGRAPH AND TELEPHONE CORPORATION
+ *	  Copyright (c) 2007-2011, NIPPON TELEGRAPH AND TELEPHONE CORPORATION
  */
 
 /**
@@ -37,6 +37,7 @@ static char *parse_badfile = NULL;		/* PARSE_BADFILE */
 static char *duplicate_badfile = NULL;	/* DUPLICATE_BADFILE */
 static List *bulkload_options = NIL;
 static bool	type_function = false;
+static bool	type_binary = false;
 
 /*
  * The length of the database cluster directory name should be short enough
@@ -70,6 +71,10 @@ parse_option(pgut_option *opt, char *arg)
 
 	if (pg_strcasecmp(arg, "TYPE=FUNCTION") == 0)
 		type_function = true;
+
+	if (pg_strcasecmp(arg, "TYPE=BINARY") == 0 ||
+		pg_strcasecmp(arg, "TYPE=FIXED") == 0)
+		type_binary = true;
 }
 
 static pgut_option options[] =
@@ -297,7 +302,7 @@ LoaderLoadMain(List *options)
 	if (PQresultStatus(res) == PGRES_COPY_IN)
 	{
 		PQclear(res);
-		res = RemoteLoad(connection, stdin, false);
+		res = RemoteLoad(connection, stdin, type_binary);
 		if (PQresultStatus(res) != PGRES_TUPLES_OK)
 			elog(ERROR, "copy failed: %s", PQerrorMessage(connection));
 	}
@@ -488,6 +493,10 @@ ParseControlFile(const char *path)
 
 			if (pg_strcasecmp(item, "TYPE=FUNCTION") == 0)
 				type_function = true;
+
+			if (pg_strcasecmp(item, "TYPE=BINARY") == 0 ||
+				pg_strcasecmp(item, "TYPE=FIXED") == 0)
+				type_binary = true;
 		}
 	}
 
